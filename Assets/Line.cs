@@ -5,43 +5,63 @@ using UnityEngine;
 
 public class Line : MonoBehaviour {
 
-    public Player player;
-    public Station station1;
-    public Station station2;
-	Renderer rend;
+	public Player player;
+	public Station station1;
+	public Station station2;
 	public bool running;
-    public int[] closureTimes;
+	public int[] closureTimes;
+
+	private Color baseColor;
+	private bool highlight_up;
+	private float highlight_timeFrame = 4;
 
 	// Use this for initialization
 	void Start () {
-        running = true;
-		rend = GetComponent<Renderer> ();
-		rend.material.shader = Shader.Find ("Specular");
+		baseColor = GetComponent<Renderer> ().material.color;
+		running = true;
 	}
 
 	// Update is called once per frame
 	void Update () {
-		if (closureTimes.Contains (player.currentTime)) {
-			rend.material.SetColor ("_Color", Color.red);
+		if(closureTimes.Contains(player.currentTime))
 			running = false;
-		} else {
-			rend.material.SetColor ("_Color", Color.white);
+		else
 			running = true;
+	}
+
+	void OnMouseDown() {
+		if(running == true) {
+			if(player.currentStation == station1)
+				player.currentStation = station2;
+			else if(player.currentStation == station2)
+				player.currentStation = station1;
+			player.currentTime += 1;
 		}
 	}
 
-    void OnMouseDown() {
-        if(running == true) {
-			if (player.currentStation == station1) {
-				player.oldStation = station1;
-				player.currentStation = station2;
-				player.moveToStation();
-			} else if (player.currentStation == station2) {
-				player.oldStation = station2;
-				player.currentStation = station1;
-				player.moveToStation();
+	void OnMouseOver() {
+		if (!running) {
+			return;
+		}
+		Color result = GetComponent<Renderer> ().material.color;
+		if (result.b > 0.7) {
+			if (result.b > 0.8) {
+				result.b = 0.7f;
 			}
-            player.currentTime += 1;
-        }
-    }
+			highlight_up = false;
+		}
+		if (result.b < 0.4) {
+			highlight_up = true;
+		}
+		if (highlight_up) {
+			result.b += Time.deltaTime / highlight_timeFrame;
+		} else {
+			result.b -= Time.deltaTime / highlight_timeFrame;
+		}
+		GetComponent<Renderer> ().material.color = result;
+	}
+
+	void OnMouseExit() {
+		GetComponent<Renderer> ().material.color = baseColor;
+	}
 }
