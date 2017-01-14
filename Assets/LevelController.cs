@@ -7,25 +7,26 @@ public class LevelController : MonoBehaviour {
 
     float time;
     public Text closurelisttext;
-    List<Line> lines = new List<Line>();
+    public Text timetext;
+    List<Line> lines;
 
 	void Start () {
         time = 0.0f;
+        makeLines();
 	}
     void makeLines() {
-        lines.Add(new Line());
-        lines.Add(new Line());
-        lines.Add(new Line());
-        lines.Add(new Line());
-        lines.Add(new Line());
+        //get a list of all the lines
     }
 
+    Line findLine(Station src, Station dst) {
+        //return line between station src and station dst
+        return null;
+    }
     void updateController(Line line){
-        time += line.time; //time_between?
+        time += 2.0f;
+        timetext.text = "Time: " + time;
         if (time == 2.0) {
-            //add closure from station 2 to station 3
-            //change text of closure list
-
+            //findLine(station2, station3).running = false;
             closurelisttext.text += "There is a closure between Station 2 and 3\n";
         }        
 
