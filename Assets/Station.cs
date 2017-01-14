@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Station : MonoBehaviour {
 
 	// Store the prefab in the script from the editor
-	public Transform buttonPrefab;
-	// Store all connections from the editor
-	public Line[] connections;
+	public GameObject buttonPrefab;
+	// Store all connections from the editor (as GameObjects)
+	public Station[] connections;
 	// Display name for the station
 	public string displayName;
 
@@ -19,25 +20,29 @@ public class Station : MonoBehaviour {
 	void Start () {
 		pos = transform.position;
 		screenPos = Camera.main.WorldToScreenPoint (pos);
+		displayMoves();
 	}
 
 	// Display options for route selection when arriving
 	void displayMoves () {
-		Transform button;
+		GameObject button;
 		Text buttonText;
 
 		// Set initial screen position for buttons
-		Transform buttonAnchor = Vector3(screenPos.x + 20, screenPos.y + 20, screenPos.z);
+		Vector3 buttonAnchor = new Vector3(screenPos.x, screenPos.y, screenPos.z);
 
 		// Find lines connected to this station that are open
-		for (int i; i < connections.Length; i++) {
-			if (connections[i].isOpen()) {
+		int i;
+		for (i = 0; i < connections.Length; i++) {
+			// needs to be changed so that it checks if the line is open
+			//if (connections[i] != null) {
 				// Display HUD elements to move to station
 				button = Instantiate(buttonPrefab, buttonAnchor, Quaternion.identity);
 				// Update position so that they don't stack weirdly
-				buttonText = button.getComponent<Text> ();
+				buttonText = button.GetComponent<Text>();
 				buttonText.text = displayName;
-			}
+				//Player.moveTo(connections);
+			//}
 		}
 	}
 
